@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "explainable-federated-multi-agent-prototype"
+version = "0.1.0"
+description = "Prototype for explainable federated multi-agent learning"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+flower = ["flwr>=1.15.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["client", "server", "shared"]
+
+[tool.flwr.app]
+publisher = "local"
+
+[tool.flwr.app.components]
+serverapp = "server.flower_server:app"
+clientapp = "client.federation.flower_client:app"
+
+[tool.flwr.federations.local-simulation]
+options.num-supernodes = 3
+
