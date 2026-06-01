@@ -17,6 +17,7 @@ Run the local simulation without external dependencies:
 python .\demos\run_single_client.py
 python .\demos\run_federated_simulation.py
 python .\demos\run_slm_client.py
+python .\demos\run_server_task_dispatch.py
 ```
 
 The SLM demo defaults to a dependency-free mock backend. To use a local SLM

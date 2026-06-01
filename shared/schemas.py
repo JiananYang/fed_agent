@@ -78,3 +78,28 @@ class TrainingExample:
     label_tool: str
     source_task_id: str
 
+
+@dataclass
+class ClientProfile:
+    client_id: str
+    capabilities: list[str]
+    tools: list[str]
+    availability: str = "online"
+    load: float = 0.0
+    trust_score: float = 1.0
+
+
+@dataclass
+class ClientSelection:
+    task_id: str
+    selected_client_id: str
+    required_capability: str
+    score: float
+    reason: str
+    candidates: list[dict[str, Any]]
+
+
+@dataclass
+class TaskDispatchResult:
+    selection: ClientSelection
+    trace: AgentTrace
