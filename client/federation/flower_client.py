@@ -2,10 +2,12 @@ from __future__ import annotations
 
 try:
     import flwr as fl
+    import numpy as np
     from flwr.client import ClientApp, NumPyClient
     from flwr.common import Context
 except ImportError:  # Allows local demos to run without Flower installed.
     fl = None
+    np = None
     ClientApp = None
     NumPyClient = object
     Context = object
@@ -38,18 +40,18 @@ class FlowerToolRouterClient(NumPyClient):
         self.examples = LOCAL_DATA[client_id]
 
     def get_parameters(self, config):
-        return self.router.get_parameters()
+        return [np.array(row, dtype=np.float32) for row in self.router.get_parameters()]
 
     def fit(self, parameters, config):
-        self.router.set_parameters(parameters)
+        self.router.set_parameters([param.tolist() for param in parameters])
         loss = train_tool_router(self.router, self.examples)
-        return self.router.get_parameters(), len(self.examples), {
+        return self.get_parameters(config), len(self.examples), {
             "client_id": self.client_id,
             "loss": loss,
         }
 
     def evaluate(self, parameters, config):
-        self.router.set_parameters(parameters)
+        self.router.set_parameters([param.tolist() for param in parameters])
         correct = 0
         for example in self.examples:
             correct += int(self.router.predict(example.query).label == example.label_tool)
@@ -67,4 +69,3 @@ def client_fn(context: Context):
 
 
 app = ClientApp(client_fn=client_fn) if ClientApp else None
-

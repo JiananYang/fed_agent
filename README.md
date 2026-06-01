@@ -38,3 +38,23 @@ Install Flower later when you want real federated runs:
 pip install flwr
 flwr run .
 ```
+
+## Real Flower Simulation
+
+The dependency-free demo in `demos/run_federated_simulation.py` manually
+simulates FedAvg. To run the actual Flower app:
+
+```powershell
+conda activate federated-agent
+pip install ".[flower]"
+$env:PYTHONIOENCODING="utf-8"
+flwr run . --federation-config "num-supernodes=3" --stream
+```
+
+Flower uses:
+
+```text
+client.federation.flower_client:app
+server.flower_server:app
+local-simulation with 3 supernodes
+```
