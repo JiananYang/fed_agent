@@ -11,7 +11,7 @@ class PlanningAgent:
     def plan(self, task: AgentTask, trace: AgentTrace) -> Plan:
         prediction = self.router.predict(task.query)
         task_type = self._task_type_from_tool(prediction.label)
-        selected_agents = ["memory", "planner", "tool_agent", "critic", "safety"]
+        selected_agents = ["memory", "planner", "tool_agent", "slm"]
         plan = Plan(
             task_type=task_type,
             selected_agents=selected_agents,

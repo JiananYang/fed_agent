@@ -49,6 +49,7 @@ simulates FedAvg. To run the actual Flower app:
 conda activate federated-agent
 pip install ".[flower]"
 $env:PYTHONIOENCODING="utf-8"
+$env:PATH="C:\Users\Peter\miniconda3\envs\federated-agent\Scripts;" + $env:PATH
 flwr run . --federation-config "num-supernodes=3" --stream
 ```
 
@@ -92,12 +93,9 @@ PlanningAgent
 ToolAgent
   executes the selected tool
 
-CriticAgent
-  validates whether the tool result is usable
-
-SafetyAgent
-  applies a basic local safety check
-
-WriterAgent
-  optionally uses the configured SLM backend for final answer generation
+SLM
+  generates the final response from the selected tool result
 ```
+
+The MemoryAgent, ToolAgent, and SLM are static local execution components. The
+collaboratively trained component is the PlanningAgent's `ToolRouter`.
