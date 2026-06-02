@@ -7,9 +7,9 @@ from shared.tool_router import ToolRouter
 
 
 CAPABILITY_BY_TOOL = {
-    "calculator": "finance",
-    "search": "research",
-    "contract_risk": "legal",
+    "calculator": "quantitative_analysis",
+    "paper_search": "scientific_literature",
+    "claim_verification": "scientific_verification",
     "general": "general",
 }
 

@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT))
 
 from client.learning.controller import LearningController
 from client.runtime import ClientRuntime
+from shared.scientific_dataset import SCIENTIFIC_CLIENT_DATA
 from shared.slm import build_slm_from_env
 from shared.slm_tool_router import SLMToolRouter
 
@@ -18,19 +19,18 @@ def main() -> None:
     runtime = ClientRuntime(client_id="client_slm", slm=slm)
 
     labeled_examples = [
-        ("calculate 20 and 22", "calculator"),
-        ("search latest procurement policy", "search"),
-        ("check contract liability risk", "contract_risk"),
         ("hello explain what you can do", "general"),
+        *[(example.query, example.label_tool) for examples in SCIENTIFIC_CLIENT_DATA.values() for example in examples[:1]],
     ]
     for query, label_tool in labeled_examples:
         runtime.run_task(query, label_tool=label_tool)
 
     result = LearningController(runtime).update_from_traces()
-    trace = runtime.run_task("please review termination risk in this contract")
+    query = "verify whether the paper supports the vaccine efficacy claim"
+    trace = runtime.run_task(query)
 
     slm_router = SLMToolRouter(slm)
-    slm_prediction = slm_router.predict("please review termination risk in this contract")
+    slm_prediction = slm_router.predict(query)
 
     print(json.dumps({
         "slm_backend": slm.name,
@@ -48,4 +48,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -13,24 +13,11 @@ except ImportError:  # Allows local demos to run without Flower installed.
     Context = object
 
 from client.learning.local_train import train_tool_router
-from shared.schemas import TrainingExample
+from shared.scientific_dataset import SCIENTIFIC_CLIENT_DATA
 from shared.tool_router import ToolRouter
 
 
-LOCAL_DATA = {
-    0: [
-        TrainingExample("calculate 10 and 25", "calculator", "seed_0"),
-        TrainingExample("sum price margin 3 and 7", "calculator", "seed_1"),
-    ],
-    1: [
-        TrainingExample("search latest policy", "search", "seed_2"),
-        TrainingExample("find latest regulation", "search", "seed_3"),
-    ],
-    2: [
-        TrainingExample("contract termination risk", "contract_risk", "seed_4"),
-        TrainingExample("review liability clause", "contract_risk", "seed_5"),
-    ],
-}
+LOCAL_DATA = SCIENTIFIC_CLIENT_DATA
 
 
 class FlowerToolRouterClient(NumPyClient):

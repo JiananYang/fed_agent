@@ -25,8 +25,8 @@ class PlanningAgent:
     def _task_type_from_tool(self, tool_name: str) -> str:
         mapping = {
             "calculator": "calculation",
-            "search": "information_retrieval",
-            "contract_risk": "contract_review",
+            "paper_search": "scientific_literature_search",
+            "claim_verification": "scientific_claim_verification",
             "general": "general_assistance",
         }
         return mapping.get(tool_name, "general_assistance")

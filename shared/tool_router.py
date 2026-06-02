@@ -4,22 +4,34 @@ import math
 from dataclasses import dataclass
 
 
-LABELS = ["calculator", "search", "contract_risk", "general"]
+LABELS = ["calculator", "paper_search", "claim_verification", "general"]
 
 VOCAB = [
     "sum",
     "calculate",
-    "price",
-    "margin",
+    "mean",
+    "total",
+    "sample",
+    "participants",
+    "measurement",
     "search",
     "find",
-    "latest",
-    "policy",
-    "contract",
-    "risk",
-    "clause",
-    "termination",
-    "liability",
+    "look",
+    "paper",
+    "papers",
+    "study",
+    "studies",
+    "evidence",
+    "abstract",
+    "claim",
+    "verify",
+    "check",
+    "support",
+    "supports",
+    "refute",
+    "refutes",
+    "biomedical",
+    "scientific",
     "hello",
     "explain",
     "help",
@@ -106,4 +118,3 @@ def average_parameters(parameter_sets: list[list[list[float]]]) -> list[list[flo
             for col in range(cols):
                 averaged[row][col] += params[row][col] / len(parameter_sets)
     return averaged
-

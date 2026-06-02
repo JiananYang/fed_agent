@@ -9,6 +9,7 @@ sys.path.insert(0, str(ROOT))
 
 from client.learning.controller import LearningController
 from client.runtime import ClientRuntime
+from shared.scientific_dataset import SCIENTIFIC_CLIENT_DATA
 
 
 def main() -> None:
@@ -16,9 +17,11 @@ def main() -> None:
 
     queries = [
         ("hello can you help explain this", "general"),
-        ("calculate 25 and 17", "calculator"),
-        ("please check contract termination risk", "contract_risk"),
-        ("search latest policy update", "search"),
+        *[
+            (example.query, example.label_tool)
+            for examples in SCIENTIFIC_CLIENT_DATA.values()
+            for example in examples[:1]
+        ],
     ]
 
     for query, label_tool in queries:
@@ -28,7 +31,10 @@ def main() -> None:
     learning = LearningController(runtime)
     result = learning.update_from_traces()
 
-    after = runtime.run_task("review liability clause in this contract", label_tool="contract_risk")
+    after = runtime.run_task(
+        "verify whether the paper supports the vaccine efficacy claim",
+        label_tool="claim_verification",
+    )
     print(json.dumps(result, indent=2))
     print(json.dumps({
         "final_answer": after.final_answer,

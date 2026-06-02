@@ -24,11 +24,11 @@ class MockSLM:
     def generate(self, prompt: str, *, system: str | None = None) -> str:
         if "Choose exactly one tool" in prompt:
             lowered = prompt.lower()
-            if any(term in lowered for term in ["contract", "clause", "risk", "liability"]):
-                return "contract_risk"
-            if any(term in lowered for term in ["search", "find", "latest", "policy"]):
-                return "search"
-            if any(term in lowered for term in ["calculate", "sum", "price", "margin"]):
+            if any(term in lowered for term in ["verify", "claim", "support", "refute", "evidence"]):
+                return "claim_verification"
+            if any(term in lowered for term in ["search", "find", "look up", "paper", "papers", "study"]):
+                return "paper_search"
+            if any(term in lowered for term in ["calculate", "sum", "mean", "total", "sample"]):
                 return "calculator"
             return "general"
 
@@ -88,4 +88,3 @@ def build_slm_from_env() -> SLMClient:
     if backend == "mock":
         return MockSLM()
     raise ValueError(f"Unsupported SLM_BACKEND={backend!r}")
-

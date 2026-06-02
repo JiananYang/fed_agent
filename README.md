@@ -8,6 +8,7 @@ This prototype demonstrates the core architecture:
 - Trainable tool-side components, starting with a `ToolRouter`
 - Flower-based aggregation of shared trainable components
 - Explainability across planning, memory, tool use, training, and aggregation
+- Scientific task routing using a local SciFact/QASPER-style seed dataset
 
 ## Quick Start
 
@@ -99,3 +100,23 @@ SLM
 
 The MemoryAgent, ToolAgent, and SLM are static local execution components. The
 collaboratively trained component is the PlanningAgent's `ToolRouter`.
+
+## Scientific Dataset
+
+The prototype uses [shared/scientific_dataset.py](shared/scientific_dataset.py)
+as a dependency-free scientific seed dataset. It contains local client examples
+for:
+
+```text
+calculator
+  quantitative scientific calculations
+
+paper_search
+  scientific literature search
+
+claim_verification
+  scientific claim verification with evidence
+```
+
+This keeps the demos runnable without network access. A real SciFact, QASPER,
+PubMedQA, or BioASQ loader can replace this seed dataset later.

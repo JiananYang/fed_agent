@@ -10,34 +10,26 @@ sys.path.insert(0, str(ROOT))
 from client.learning.controller import LearningController
 from client.runtime import ClientRuntime
 from server.task_gateway import TaskGateway
+from shared.scientific_dataset import SCIENTIFIC_CLIENT_DATA
 from shared.schemas import ClientProfile
 from shared.tool_router import ToolRouter, average_parameters
 
 
 SEED_CLIENTS = {
-    "client_legal": {
-        "capabilities": ["legal", "general"],
-        "tools": ["contract_risk", "general"],
-        "examples": [
-            ("contract termination risk", "contract_risk"),
-            ("review liability clause", "contract_risk"),
-        ],
-    },
-    "client_research": {
-        "capabilities": ["research", "general"],
-        "tools": ["search", "general"],
-        "examples": [
-            ("search latest policy", "search"),
-            ("find latest regulation", "search"),
-        ],
-    },
-    "client_finance": {
-        "capabilities": ["finance", "general"],
+    "client_quant": {
+        "capabilities": ["quantitative_analysis", "general"],
         "tools": ["calculator", "general"],
-        "examples": [
-            ("calculate 10 and 25", "calculator"),
-            ("sum price 30 and 5", "calculator"),
-        ],
+        "examples": [(example.query, example.label_tool) for example in SCIENTIFIC_CLIENT_DATA[0]],
+    },
+    "client_literature": {
+        "capabilities": ["scientific_literature", "general"],
+        "tools": ["paper_search", "general"],
+        "examples": [(example.query, example.label_tool) for example in SCIENTIFIC_CLIENT_DATA[1]],
+    },
+    "client_verifier": {
+        "capabilities": ["scientific_verification", "general"],
+        "tools": ["claim_verification", "general"],
+        "examples": [(example.query, example.label_tool) for example in SCIENTIFIC_CLIENT_DATA[2]],
     },
 }
 
@@ -68,12 +60,12 @@ def main() -> None:
                 client_id=client_id,
                 capabilities=config["capabilities"],
                 tools=config["tools"],
-                load=0.2 if client_id != "client_legal" else 0.1,
+                load=0.2 if client_id != "client_verifier" else 0.1,
             ),
             runtimes[client_id],
         )
 
-    result = gateway.dispatch("please review termination risk in this contract")
+    result = gateway.dispatch("verify whether the paper supports the vaccine efficacy claim")
     selected_profile = gateway.memory_agent.get_client(result.selection.selected_client_id)
     selected_history = gateway.memory_agent.history_for_client(result.selection.selected_client_id)
     print(json.dumps({

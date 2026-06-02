@@ -50,13 +50,14 @@ class MemoryAgent:
         if not trace.tool_result or not trace.tool_result.success:
             return None
 
+        label_tool = trace.task.metadata.get("label_tool", trace.plan.selected_tool)
         record = self.memory.write(
             text=(
                 f"For similar query '{trace.task.query}', "
-                f"tool '{trace.plan.selected_tool}' worked."
+                f"tool '{label_tool}' worked."
             ),
             memory_type="episodic",
-            tags=[trace.plan.task_type, trace.plan.selected_tool],
+            tags=[trace.plan.task_type, label_tool],
             source_task_id=trace.task.task_id,
         )
         recorder.record(
@@ -72,4 +73,3 @@ class MemoryAgent:
             },
         )
         return record
-

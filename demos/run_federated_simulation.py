@@ -9,32 +9,26 @@ sys.path.insert(0, str(ROOT))
 from client.learning.controller import LearningController
 from client.runtime import ClientRuntime
 from shared.metrics import tool_accuracy
+from shared.scientific_dataset import SCIENTIFIC_CLIENT_DATA, SCIENTIFIC_EVAL
 from shared.tool_router import ToolRouter, average_parameters
 
 
 CLIENT_QUERIES = {
-    "client_legal": [
-        ("contract termination risk", "contract_risk"),
-        ("review liability clause", "contract_risk"),
-        ("check contract indemnity clause", "contract_risk"),
+    "client_quant": [
+        (example.query, example.label_tool)
+        for example in SCIENTIFIC_CLIENT_DATA[0]
     ],
-    "client_research": [
-        ("search latest policy", "search"),
-        ("find latest regulation", "search"),
-        ("search market update", "search"),
+    "client_literature": [
+        (example.query, example.label_tool)
+        for example in SCIENTIFIC_CLIENT_DATA[1]
     ],
-    "client_finance": [
-        ("calculate 10 and 25", "calculator"),
-        ("sum price 30 and 5", "calculator"),
-        ("calculate margin 100 and 40", "calculator"),
+    "client_verifier": [
+        (example.query, example.label_tool)
+        for example in SCIENTIFIC_CLIENT_DATA[2]
     ],
 }
 
-EVAL = [
-    ("check contract termination clause", "contract_risk"),
-    ("search latest compliance policy", "search"),
-    ("calculate 9 and 11", "calculator"),
-]
+EVAL = SCIENTIFIC_EVAL
 
 
 def main() -> None:
@@ -56,7 +50,7 @@ def main() -> None:
     print(f"global_accuracy_after={tool_accuracy(global_router, EVAL):.3f}")
 
     demo_runtime = ClientRuntime(client_id="client_demo", router=global_router)
-    trace = demo_runtime.run_task("please review liability risk in this contract")
+    trace = demo_runtime.run_task("verify whether the paper supports the vaccine efficacy claim")
     print(f"selected_tool={trace.plan.selected_tool if trace.plan else None}")
     print(f"answer={trace.final_answer}")
 

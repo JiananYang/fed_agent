@@ -14,13 +14,13 @@ def calculator_tool(query: str) -> str:
 
 
 def search_tool(query: str) -> str:
-    return f"mock_search_result: found relevant notes for '{query}'"
+    return f"paper_search_result: found candidate scientific papers for '{query}'"
 
 
-def contract_risk_tool(query: str) -> str:
+def claim_verification_tool(query: str) -> str:
     return (
-        "risk_report: review termination, liability, indemnity, payment, "
-        "and unilateral change clauses."
+        "claim_verification_result: retrieve abstracts, identify supporting "
+        "or refuting evidence, and return support/refute/not-enough-info."
     )
 
 
@@ -30,8 +30,8 @@ def general_tool(query: str) -> str:
 
 TOOLS = {
     "calculator": calculator_tool,
-    "search": search_tool,
-    "contract_risk": contract_risk_tool,
+    "paper_search": search_tool,
+    "claim_verification": claim_verification_tool,
     "general": general_tool,
 }
 
@@ -56,4 +56,3 @@ def call_tool(tool_name: str, query: str) -> ToolResult:
             success=False,
             latency_ms=(perf_counter() - start) * 1000,
         )
-
