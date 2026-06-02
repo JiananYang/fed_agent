@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from client.agents.critic import CriticAgent
+from client.agents.memory_agent import MemoryAgent
 from client.agents.planner import PlanningAgent
 from client.agents.safety import SafetyAgent
 from client.agents.tool_agent import ToolAgent
@@ -23,6 +24,7 @@ class ClientRuntime:
         self.router = router or ToolRouter()
         self.slm = slm
         self.memory = LocalMemory(client_id)
+        self.memory_agent = MemoryAgent(self.memory)
         self.planner = PlanningAgent(self.router)
         self.tool_agent = ToolAgent()
         self.critic = CriticAgent()
@@ -41,15 +43,7 @@ class ClientRuntime:
         trace = AgentTrace(task=task, user_feedback=user_feedback)
         recorder = ExplanationRecorder(trace)
 
-        memories = self.memory.search(query)
-        recorder.record(
-            layer="memory",
-            event_type="memory_read",
-            decision=f"{len(memories)} records",
-            reason="Runtime searched local private memory before planning.",
-            evidence=[record.text for record in memories],
-            metrics={"memory_count": len(memories)},
-        )
+        self.memory_agent.retrieve(task, trace, recorder)
 
         if not self.safety.run(task, recorder):
             trace.final_answer = "Request blocked by safety policy."
@@ -77,20 +71,7 @@ class ClientRuntime:
         else:
             trace.final_answer = "Unable to complete task."
 
-        if user_feedback == "accepted" and trace.plan and trace.plan.selected_tool:
-            record = self.memory.write(
-                text=f"For similar query '{query}', tool '{trace.plan.selected_tool}' worked.",
-                memory_type="episodic",
-                tags=[trace.plan.task_type, trace.plan.selected_tool],
-                source_task_id=task.task_id,
-            )
-            recorder.record(
-                layer="memory",
-                event_type="memory_write",
-                decision=record.memory_id,
-                reason="Accepted task outcome was stored as local episodic memory.",
-                evidence=[record.text],
-            )
+        self.memory_agent.update_after_task(trace, recorder)
 
         self.traces.append(trace)
         return trace

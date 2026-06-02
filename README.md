@@ -59,3 +59,27 @@ client.federation.flower_client:app
 server.flower_server:app
 local-simulation with 3 supernodes
 ```
+
+## Client Agents
+
+Each client currently runs:
+
+```text
+MemoryAgent
+  retrieves and updates private local memory
+
+PlanningAgent
+  selects task type and first tool through the trainable ToolRouter
+
+ToolAgent
+  executes the selected tool
+
+CriticAgent
+  validates whether the tool result is usable
+
+SafetyAgent
+  applies a basic local safety check
+
+WriterAgent
+  optionally uses the configured SLM backend for final answer generation
+```
