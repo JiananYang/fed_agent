@@ -60,6 +60,24 @@ server.flower_server:app
 local-simulation with 3 supernodes
 ```
 
+## Server Orchestration
+
+The server-side runtime is separate from Flower:
+
+```text
+TaskGateway
+  receives external tasks
+
+ServerMemoryAgent
+  stores client states, activity histories, and specialities
+
+ClientSelector
+  arranges and forwards tasks to selected clients
+```
+
+The server memory stores orchestration metadata only. Raw private client data
+and local client memories remain inside each client.
+
 ## Client Agents
 
 Each client currently runs:

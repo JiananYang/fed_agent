@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from client.runtime import ClientRuntime
+from server.memory_agent import ServerMemoryAgent
 from shared.schemas import AgentTask, ClientProfile, ClientSelection
 from shared.tool_router import ToolRouter
 
@@ -13,7 +15,7 @@ CAPABILITY_BY_TOOL = {
 
 
 class ClientSelector:
-    """Selects the best client to solve an incoming server task."""
+    """Arranges and forwards tasks to selected clients."""
 
     def __init__(self, router: ToolRouter) -> None:
         self.router = router
@@ -64,3 +66,17 @@ class ClientSelector:
             candidates=candidates,
         )
 
+    def arrange(self, task: AgentTask, memory: ServerMemoryAgent) -> ClientSelection:
+        return self.select(task, memory.list_clients())
+
+    def forward(
+        self,
+        task: AgentTask,
+        selection: ClientSelection,
+        runtimes: dict[str, ClientRuntime],
+        memory: ServerMemoryAgent,
+    ):
+        runtime = runtimes[selection.selected_client_id]
+        trace = runtime.run_task(task.query)
+        memory.remember_activity(selection.selected_client_id, trace)
+        return trace

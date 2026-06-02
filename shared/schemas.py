@@ -90,6 +90,17 @@ class ClientProfile:
 
 
 @dataclass
+class ClientActivity:
+    client_id: str
+    task_id: str
+    query: str
+    selected_tool: str | None
+    success: bool
+    final_answer: str | None
+    timestamp: float = field(default_factory=time)
+
+
+@dataclass
 class ClientSelection:
     task_id: str
     selected_client_id: str

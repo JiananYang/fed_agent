@@ -74,11 +74,15 @@ def main() -> None:
         )
 
     result = gateway.dispatch("please review termination risk in this contract")
+    selected_profile = gateway.memory_agent.get_client(result.selection.selected_client_id)
+    selected_history = gateway.memory_agent.history_for_client(result.selection.selected_client_id)
     print(json.dumps({
         "selected_client": result.selection.selected_client_id,
         "selection_reason": result.selection.reason,
         "required_capability": result.selection.required_capability,
         "candidate_scores": result.selection.candidates,
+        "selected_client_activity_count": len(selected_history),
+        "selected_client_trust_score": selected_profile.trust_score,
         "client_selected_tool": result.trace.plan.selected_tool if result.trace.plan else None,
         "answer": result.trace.final_answer,
     }, indent=2))
@@ -86,4 +90,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
